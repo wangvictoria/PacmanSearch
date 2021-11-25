@@ -156,7 +156,39 @@ def breadthFirstSearch(problem):
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    prev = dict()
+    cost = dict()
+    visited = set()
+    pQueue = util.PriorityQueue()
+
+    cost[problem.getStartState()] = 0
+
+    # add start state to priority queue with no direction and no cost
+    pQueue.push((problem.getStartState(), None, 0), 0)
+
+    while not pQueue.isEmpty():
+        # pop from priority queue
+        curNode = pQueue.pop()
+        curState = curNode[0]
+
+        if problem.isGoalState(curState):
+            # go through our list of prev nodes to find the path taken to get to goal state
+            return path(curNode, prev)
+        
+        # have not been explored
+        if curState not in visited:
+            visited.add(curState)
+
+            for successor in problem.getSuccessors(curState):
+                succState, succStep, succCost = successor
+                if succState not in visited:
+                    # add up costs
+                    cost[succState] = cost[curState] + succCost
+                    # don't need to take heuristic into account
+                    pQueue.update((succState, succStep), cost[succState])
+                    # prev of successor state is the current node
+                    prev[(succState, succStep)] = curNode
+    return []
 
 def nullHeuristic(state, problem=None):
     """
@@ -168,7 +200,39 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    prev = dict()
+    cost = dict()
+    visited = set()
+    pQueue = util.PriorityQueue()
+
+    cost[problem.getStartState()] = 0
+
+    # add start state to priority queue with no direction and no cost
+    pQueue.push((problem.getStartState(), None, 0), 0)
+
+    while not pQueue.isEmpty():
+        # pop from priority queue
+        curNode = pQueue.pop()
+        curState = curNode[0]
+
+        if problem.isGoalState(curState):
+            # go through our list of prev nodes to find the path taken to get to goal state
+            return path(curNode, prev)
+        
+        # have not been explored
+        if curState not in visited:
+            visited.add(curState)
+
+            for successor in problem.getSuccessors(curState):
+                succState, succStep, succCost = successor
+                if succState not in visited:
+                    # add up costs
+                    cost[succState] = cost[curState] + succCost
+                    # add the heuristic for A* search
+                    pQueue.update((succState, succStep), cost[succState] + heuristic(succState, problem))
+                    # prev of successor state is the current node
+                    prev[(succState, succStep)] = curNode
+    return []
 
 
 # Abbreviations
