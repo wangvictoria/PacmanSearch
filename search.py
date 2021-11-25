@@ -72,6 +72,15 @@ def tinyMazeSearch(problem):
     w = Directions.WEST
     return  [s, s, w, s, w, w, s, w]
 
+def path(start, prev):
+    path = [start[1]]
+    # track backwards to find our start state
+    while prev[start][1] != None:
+        step = prev[start][1]
+        start = prev[start]
+        path.append(step)
+    return path[::-1]
+
 def depthFirstSearch(problem):
     """
     Search the deepest nodes in the search tree first.
@@ -87,12 +96,62 @@ def depthFirstSearch(problem):
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    # keep track of our path to the current state
+    prev = dict()
+    visited = set()
+    stack = util.Stack()
+
+    # push start state to stack with no direction and no cost
+    stack.push((problem.getStartState(), None, 0))
+    while not stack.isEmpty():
+        # pop from stack
+        curNode = stack.pop()
+        curState = curNode[0]
+        if problem.isGoalState(curState):
+            # go through our list of prev nodes to find the path taken to get to goal state
+            return path(curNode, prev)
+
+        # have not been explored
+        if curState not in visited:
+            visited.add(curState)
+
+            # add successors from north, south, east, west
+            for successor in problem.getSuccessors(curState):
+                succState = successor[0]
+                if succState not in visited:
+                    stack.push(successor)
+                    prev[successor] = curNode
+    return []
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    # keep track of our path to the current state
+    prev = dict()
+    visited = set()
+    queue = util.Queue()
+
+    # push start state to queue with no direction and no cost
+    queue.push((problem.getStartState(), None, 0))
+    while not queue.isEmpty():
+        # pop from queue
+        curNode = queue.pop()
+        curState = curNode[0]
+        if problem.isGoalState(curState):
+            # go through our list of prev nodes to find the path taken to get to goal state
+            return path(curNode, prev)
+
+        # have not been explored
+        if curState not in visited:
+            visited.add(curState)
+
+            # add successors from north, south, east, west
+            for successor in problem.getSuccessors(curState):
+                succState = successor[0]
+                if succState not in visited:
+                    queue.push(successor)
+                    prev[successor] = curNode
+    return []
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
