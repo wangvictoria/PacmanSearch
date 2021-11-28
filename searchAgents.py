@@ -333,16 +333,17 @@ class CornersProblem(search.SearchProblem):
             "*** YOUR CODE HERE ***"
             x, y = state[0]
             dx, dy = Actions.directionToVector(action)
-            nextLoc = (int(x + dx), int(y + dy))
-            
-            if nextLoc in self.walls:
+            nx, ny = (int(x + dx), int(y + dy))
+            nextLoc = nx, ny
+            walls = self.walls[nx][ny]
+            if walls:
                 continue
-            
-            if nextLoc in self.corners:
-                if nextLoc in corners:
-                    corners.remove(nextLoc)
+            else:
+                if nextLoc in self.corners:
+                    if nextLoc in corners:
+                        corners.remove(nextLoc)
                         
-            successors.append(((nextLoc, tuple(corners)), action, 1))            
+                successors.append(((nextLoc, tuple(corners)), action, 1))            
 
         self._expanded += 1 # DO NOT CHANGE
         return successors
@@ -380,7 +381,7 @@ def cornersHeuristic(state, problem):
     "*** YOUR CODE HERE ***"
     startLoc = state[0]
     corners = state[1]
-    hVal = []
+    hVal = [0]
           
     for i in corners:
         hVal.append(util.manhattanDistance(startLoc,i))
