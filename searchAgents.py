@@ -37,6 +37,7 @@ Good luck and happy searching!
 from game import Directions
 from game import Agent
 from game import Actions
+from operator import sub
 import util
 import time
 import search
@@ -297,7 +298,7 @@ class CornersProblem(search.SearchProblem):
         space)
         """
         "*** YOUR CODE HERE ***"
-        return self.startingPosition, self.corners
+        return (self.startingPosition, self.corners)
         
 
     def isGoalState(self, state):
@@ -319,7 +320,7 @@ class CornersProblem(search.SearchProblem):
             state, 'action' is the action required to get there, and 'stepCost'
             is the incremental cost of expanding to that successor
         """
-        corners = state[1]
+        corners = list(state[1])
         successors = []
         for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
             # Add a successor state to the successor list if the action is legal
@@ -338,7 +339,8 @@ class CornersProblem(search.SearchProblem):
                 continue
             
             if nextLoc in self.corners:
-                corners = set(corners)-set(nextLoc)
+                if nextLoc in corners:
+                    corners.remove(nextLoc)
                         
             successors.append(((nextLoc, tuple(corners)), action, 1))            
 
@@ -385,7 +387,6 @@ def cornersHeuristic(state, problem):
         
     return max(hVal)
         
-    
     
 
 class AStarCornersAgent(SearchAgent):
