@@ -337,7 +337,7 @@ class CornersProblem(search.SearchProblem):
         
         
         
-        corners = list(state[1])
+        corners = state[1]
         successors = []
         for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
             # Add a successor state to the successor list if the action is legal
@@ -348,21 +348,17 @@ class CornersProblem(search.SearchProblem):
             #   hitsWall = self.walls[nextx][nexty]
 
             "*** YOUR CODE HERE ***"
-            for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
-                curLoc = x, y = state[0]
-                dx, dy = Actions.directionToVector(action)
-                nextLoc = nx, ny = int(x + dx), int(y + dy)
+            x, y = state[0]
+            dx, dy = Actions.directionToVector(action)
+            nextLoc = nx, ny = int(x + dx), int(y + dy)
             
-                walls = self.walls[nx][ny]
-                if walls:
-                    continue
+            walls = self.walls[nx][ny]
+            if walls:
+                continue
                     
-                if curLoc in self.corners:
-                    if curLoc in corners:
-                        corners.remove(curLoc)
+            nextState = tuple([x for x in corners if x != nextLoc])
      
-                
-                successors.append(((nextLoc, tuple(corners)), action, 1))            
+            successors.append(((nextLoc, nextState), action, 1))            
 
         self._expanded += 1 # DO NOT CHANGE
         return successors
