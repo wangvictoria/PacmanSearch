@@ -298,7 +298,7 @@ class CornersProblem(search.SearchProblem):
         space)
         """
         "*** YOUR CODE HERE ***"
-        return (self.startingPosition, self.corners)
+        return self.startingPosition, self.corners
         
 
     def isGoalState(self, state):
@@ -306,7 +306,7 @@ class CornersProblem(search.SearchProblem):
         Returns whether this search state is a goal state of the problem.
         """
         "*** YOUR CODE HERE ***"
-        return (len(state[1]) == 0)
+        return len(state[1]) == 0
     
             
 
@@ -320,6 +320,23 @@ class CornersProblem(search.SearchProblem):
             state, 'action' is the action required to get there, and 'stepCost'
             is the incremental cost of expanding to that successor
         """
+#         startLoc = state[0]
+#         cornerList = state[1]
+#         sucessor = []
+#         for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
+#             x,y = state[0]
+#             dx, dy = Actions.directionToVector(action)
+#             nextx, nexty = int(x + dx), int(y + dy)
+#             if not self.walls[nextx][nexty]:
+#                 nextLoc = cornerList
+#                 nextLoc[nextx][nexty] = False
+#                 successors.append( ( ((nextx, nexty), nextLoc), direction, 1) )
+        
+#         self._expanded += 1 # DO NOT CHANGE
+#         return successors
+        
+        
+        
         corners = list(state[1])
         successors = []
         for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
@@ -331,18 +348,20 @@ class CornersProblem(search.SearchProblem):
             #   hitsWall = self.walls[nextx][nexty]
 
             "*** YOUR CODE HERE ***"
-            x, y = state[0]
-            dx, dy = Actions.directionToVector(action)
-            nx, ny = (int(x + dx), int(y + dy))
-            nextLoc = nx, ny
-            walls = self.walls[nx][ny]
-            if walls:
-                continue
-            else:
-                if nextLoc in self.corners:
-                    if nextLoc in corners:
-                        corners.remove(nextLoc)
-                        
+            for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
+                curLoc = x, y = state[0]
+                dx, dy = Actions.directionToVector(action)
+                nextLoc = nx, ny = int(x + dx), int(y + dy)
+            
+                walls = self.walls[nx][ny]
+                if walls:
+                    continue
+                    
+                if curLoc in self.corners:
+                    if curLoc in corners:
+                        corners.remove(curLoc)
+     
+                
                 successors.append(((nextLoc, tuple(corners)), action, 1))            
 
         self._expanded += 1 # DO NOT CHANGE
